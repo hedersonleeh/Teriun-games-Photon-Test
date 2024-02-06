@@ -1,9 +1,12 @@
 ﻿using Fusion;
 using TMPro;
 using UnityEngine;
+using static InputHandler;
+
 public class Player : NetworkBehaviour
 {
     private NetworkCharacterController _cc;
+    [SerializeField] private TMP_Text _nameLabel;
     [SerializeField] private Ball _prefabBall;
     [SerializeField] private PhysxBall _prefabPhysxBall;
     [Networked] public bool spawnedProjectile { get; set; }
@@ -21,14 +24,14 @@ public class Player : NetworkBehaviour
         _cc = GetComponent<NetworkCharacterController>();
         _forward = transform.forward;
         material = GetComponentInChildren<MeshRenderer>().material;
-
+        _nameLabel.text = PlayerInputDataManager.Instance.GetNickName();
     }
     private void Update()
     {
-        if(Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
-        {
-            RPC_SendMessage("Hey Mate!");
-        }
+        //if(Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
+        //{
+        //    RPC_SendMessage("Hey Mate!");
+        //}
     }
     [Rpc(RpcSources.InputAuthority,RpcTargets.StateAuthority,HostMode =RpcHostMode.SourceIsHostPlayer)]
     private void RPC_SendMessage(string message,RpcInfo info = default)

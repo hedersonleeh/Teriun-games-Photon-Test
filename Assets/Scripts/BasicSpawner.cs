@@ -6,19 +6,11 @@ using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
 using Fusion.Addons.Physics;
-
-public struct NetworkInputData : INetworkInput
-{
-    public const byte MOUSEBUTTON0 = 1;
-    public const byte MOUSEBUTTON1 = 2;
-
-    public NetworkButtons buttons;
-    public Vector3 direction;
-}
+using static InputHandler;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-    private NetworkRunner _runner;
+    [SerializeField] private NetworkRunner _runner;
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
     async void StartGame(GameMode mode)
@@ -30,7 +22,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
         var sceneInfo = new NetworkSceneInfo();
-        if(scene.IsValid)
+        if (scene.IsValid)
         {
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
@@ -40,7 +32,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = "TestRoom",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
-        }) ;
+        });
     }
     private void OnGUI()
     {
@@ -48,7 +40,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
             {
-                StartGame(GameMode.Host);
+                StartGame(GameMode.AutoHostOrClient);
             }
             if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
             {
@@ -75,7 +67,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         _mouseButton0 = _mouseButton0 | Input.GetMouseButton(0);
         _mouseButton1 = _mouseButton1 | Input.GetMouseButton(1);
     }
-    public void OnInput(NetworkRunner runner, NetworkInput input) 
+    public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
 
@@ -116,7 +108,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) 
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
@@ -135,7 +127,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) 
+    {
+
+    }
+
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 }
