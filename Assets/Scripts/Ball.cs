@@ -5,18 +5,21 @@ using Fusion;
 public class Ball : NetworkBehaviour
 {
     [Networked] private TickTimer life { get; set; }
+    [SerializeField] private Renderer _renderer;
 
-    public void Init()
+    public void Init(Color playerColor)
     {
-        life = TickTimer.CreateFromSeconds(Runner, 5.0f);
+        life = TickTimer.CreateFromSeconds(Runner, 1.0f);
+        _renderer.material.color = playerColor;
     }
+
     public override void FixedUpdateNetwork()
     {
 
         if (life.Expired(Runner))
             Runner.Despawn(Object);
         else
-        transform.position += 5 * transform.forward * Runner.DeltaTime;
+            transform.position += 250 * transform.forward * Runner.DeltaTime;
 
 
     }

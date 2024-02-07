@@ -8,7 +8,6 @@ using Fusion.Addons.Physics;
 using TMPro;
 public class MainLobby : MonoBehaviour
 {
-    [SerializeField] private NetworkRunner _runnerPrefab;
     private NetworkRunner _runner;
 
     [SerializeField] private TMP_InputField _nickName = null;
@@ -21,41 +20,14 @@ public class MainLobby : MonoBehaviour
             _placeholder.text = "Enter your nickname";
         }
     }
-    public void HostButton()
+    public void SetNickName()
     {
         PlayerInputDataManager.Instance.SetNickName(_nickName.text);
-        StartGame(GameMode.Host);
+      
 
     }
-    public void ClientButton()
-    {
-        PlayerInputDataManager.Instance.SetNickName(_nickName.text);
-        StartGame(GameMode.Client);
-    }
-    private async void StartGame(GameMode mode)
-    {
-        _runner = gameObject.AddComponent<NetworkRunner>();
-        gameObject.AddComponent<RunnerSimulatePhysics3D>();
-        gameObject.AddComponent<InputHandler>();
-        gameObject.AddComponent<OnDisconnectHandler>();
-
-
-        var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex + 1);
-        var sceneInfo = new NetworkSceneInfo();
-        if (scene.IsValid)
-        {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-        }
-        _runner.ProvideInput = true;
-
-        await _runner.StartGame(new StartGameArgs()
-        {
-            GameMode = mode,
-            Scene = scene,
-            SessionName = "Only Room",
-        }); ;
-        //await _runner.LoadScene(scene);
-    }
+  
+    
 
 
 }

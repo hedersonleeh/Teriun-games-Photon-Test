@@ -117,6 +117,8 @@ namespace Fusion {
     [InlineHelp]
     [ScenePath]
     public string InitialScenePath;
+
+        public int indexGameplayScene;
     
     // TODO: this is debt
     static string _initialScenePath;
@@ -253,7 +255,7 @@ namespace Fusion {
         sceneRef = default;
         return false;
       } else {
-        sceneRef = SceneRef.FromIndex(activeScene.buildIndex);
+        sceneRef = SceneRef.FromIndex(indexGameplayScene);
         return true;
       }
     }
@@ -605,7 +607,7 @@ namespace Fusion {
 
       var sceneInfo = new NetworkSceneInfo();
       if (scene.IsValid) {
-        sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
+        sceneInfo.AddSceneRef(scene, LoadSceneMode.Single);
       }
 
       return runner.StartGame(new StartGameArgs {

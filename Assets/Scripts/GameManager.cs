@@ -44,7 +44,7 @@ public class GameManager : NetworkBehaviour
                 if (Object.HasStateAuthority)//only host
                 {
 
-                    FindObjectOfType<PlayerSpawner>().StartSpawning(this);
+                    //FindObjectOfType<PlayerSpawner>().StartSpawning(this);
                 }
                 break;
             case GameState.FINISH:

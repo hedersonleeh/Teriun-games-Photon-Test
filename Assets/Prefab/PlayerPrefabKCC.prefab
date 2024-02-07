@@ -34,10 +34,10 @@ RectTransform:
   m_Father: {fileID: 2376368498292994702}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 35.265, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 35.265, y: -16}
+  m_SizeDelta: {x: 0, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3635596343820057381
 CanvasRenderer:
@@ -217,6 +217,7 @@ MonoBehaviour:
   _nameLabel: {fileID: 3514889670196770784}
   _prefabBall: {fileID: 2114947634349965168, guid: 6fa0fbd42ef94fa42af16ffbb28fcc8b, type: 3}
   _prefabPhysxBall: {fileID: 4107571123096376483, guid: 1f658c6f9825d8e48a693bdc36da28ea, type: 3}
+  _animator: {fileID: 0}
   _spawnedProjectile: 0
   material: {fileID: 0}
 --- !u!114 &2514018914314578093

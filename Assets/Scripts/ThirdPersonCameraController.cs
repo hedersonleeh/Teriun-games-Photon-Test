@@ -7,11 +7,11 @@ public class ThirdPersonCameraController : MonoBehaviour
     [SerializeField] private CinemachineFreeLook _freelookCamera;
     private Transform _target;
     public Camera Camera => _camera;
-    public void SetTarget(Transform target)
+    public void SetTarget(Transform target,Transform LookAt)
     {
         _target = target;
         _freelookCamera.Follow = target;
-        _freelookCamera.LookAt = target;
+        _freelookCamera.LookAt = LookAt;
     }
 
 
