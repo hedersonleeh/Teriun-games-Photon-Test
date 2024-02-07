@@ -29,6 +29,12 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         var data = new NetworkInputData();
 
+        //if (Input.GetButton("Horizontal"))
+        //    data.direction.x = Input.GetAxisRaw("Horizontal");
+
+        //if (Input.GetButton("Vertical"))
+        //    data.direction.z = Input.GetAxisRaw("Vertical");
+
         if (Input.GetKey(KeyCode.W))
             data.direction += Vector3.forward;
 
@@ -40,6 +46,7 @@ public class InputHandler : MonoBehaviour, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
+        data.direction.Normalize();
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
         data.buttons.Set(NetworkInputData.MOUSEBUTTON1, _mouseButton1);

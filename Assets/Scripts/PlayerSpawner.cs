@@ -11,11 +11,11 @@ public class PlayerSpawner : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     private bool _gameHasStated = false;
     public void StartSpawning(GameManager manager)
     {
-        _gameHasStated = true;
         foreach (var player in Runner.ActivePlayers)
         {
             SpawnPlayer(player);
         }
+        _gameHasStated = true;
     }
 
     private void SpawnPlayer(PlayerRef player)
@@ -23,6 +23,9 @@ public class PlayerSpawner : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         // Create a unique position for the player
         Vector3 spawnPosition = new Vector3((player.RawEncoded % Runner.Config.Simulation.PlayerCount) * 3, 1, 0);
         NetworkObject networkPlayerObject = Runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+        // Set Player Object to facilitate access across systems.
+        Runner.SetPlayerObject(player, networkPlayerObject);
+
         // Keep track of the player avatars for easy access
         _spawnedCharacters.Add(player, networkPlayerObject);
     }
@@ -31,7 +34,8 @@ public class PlayerSpawner : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         if (Runner.IsServer && _gameHasStated)
         {
-            SpawnPlayer(player);
+            if (!_spawnedCharacters.ContainsKey(player))
+                SpawnPlayer(player);
         }
     }
 
@@ -41,6 +45,10 @@ public class PlayerSpawner : NetworkBehaviour, IPlayerJoined, IPlayerLeft
         {
             Runner.Despawn(networkObject);
             _spawnedCharacters.Remove(player);
+
         }
+        // Reset Player Object
+        Runner.SetPlayerObject(player, null);
+
     }
 }

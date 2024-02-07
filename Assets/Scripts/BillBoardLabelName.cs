@@ -9,6 +9,6 @@ public class BillBoardLabelName:MonoBehaviour
     }
     private void LateUpdate()
     {
-        transform.forward = _toLookcam.transform.forward;
+        //transform.forward = _toLookcam.transform.forward;
     }
 }

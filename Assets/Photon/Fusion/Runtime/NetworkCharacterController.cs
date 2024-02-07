@@ -73,8 +73,12 @@ namespace Fusion {
         Data.Velocity =  newVel;
       }
     }
+        public void LookDirection(Vector3 direction)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
 
-    public void Move(Vector3 direction) {
+        }
+        public void Move(Vector3 direction) {
       var deltaTime    = Runner.DeltaTime;
       var previousPos  = transform.position;
       var moveVelocity = Data.Velocity;
@@ -95,7 +99,6 @@ namespace Fusion {
         horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
       } else {
         horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
       }
 
       moveVelocity.x = horizontalVel.x;

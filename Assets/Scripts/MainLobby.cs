@@ -24,7 +24,7 @@ public class MainLobby : MonoBehaviour
     public void HostButton()
     {
         PlayerInputDataManager.Instance.SetNickName(_nickName.text);
-        StartGame(GameMode.AutoHostOrClient);
+        StartGame(GameMode.Host);
 
     }
     public void ClientButton()
@@ -34,10 +34,11 @@ public class MainLobby : MonoBehaviour
     }
     private async void StartGame(GameMode mode)
     {
-        _runner= Instantiate(_runnerPrefab);
+        _runner = gameObject.AddComponent<NetworkRunner>();
         gameObject.AddComponent<RunnerSimulatePhysics3D>();
+        gameObject.AddComponent<InputHandler>();
+        gameObject.AddComponent<OnDisconnectHandler>();
 
-        _runner.ProvideInput = true;
 
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex + 1);
         var sceneInfo = new NetworkSceneInfo();
@@ -50,9 +51,10 @@ public class MainLobby : MonoBehaviour
         await _runner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
+            Scene = scene,
             SessionName = "Only Room",
-        });
-        await _runner.LoadScene(scene);
+        }); ;
+        //await _runner.LoadScene(scene);
     }
 
 
