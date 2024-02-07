@@ -5,24 +5,10 @@ using UnityEngine;
 
 public class PlayerColor : NetworkBehaviour
 {
-    [Networked, OnChangedRender(nameof(OnChangeColor))] public Color playerColor { get; set; }
 
     public List<Renderer> _renderers;
-    private void OnChangeColor()
-    {
-
-        _renderers.ForEach(r => r.material.color = playerColor);
-    }
-    public override void Spawned()
-    {
-
-        if (HasStateAuthority)
-            playerColor = GetPlayerColor(Object.InputAuthority.PlayerId);
-
-        OnChangeColor();
-        
-
-    }
+   
+   
     public static Color GetPlayerColor(int id)
     {
         switch (id % 8)

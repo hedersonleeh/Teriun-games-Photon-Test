@@ -19,7 +19,11 @@ public class RaycastAttack : NetworkBehaviour
             if (hit.transform.TryGetComponent<PlayerHealth>(out var health))
             {
                 if (health.Id != Id)
-                    health.DealDamageRpc(Damage);
+                {
+
+                    health.DealDamageRpc(Object.GetBehaviour<NetworkBehaviour>(),Damage);
+
+                }
             }
         }
 

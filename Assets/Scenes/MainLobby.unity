@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1242,6 +1242,7 @@ GameObject:
   - component: {fileID: 1357278467}
   - component: {fileID: 1357278466}
   - component: {fileID: 1357278469}
+  - component: {fileID: 1357278470}
   m_Layer: 0
   m_Name: Prototype Runner
   m_TagString: Untagged
@@ -1358,6 +1359,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 4844006262205153921, guid: b69f5909d95f70b429993b5f008361e3, type: 3}
+--- !u!114 &1357278470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357278465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da15a4198a6efd42b752165f2de8195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiInfoPrefab: {fileID: 39135396594089579, guid: de8efc6f33edad948b7274716d51e513, type: 3}
+  _header: {fileID: 0}
 --- !u!1 &1405495186
 GameObject:
   m_ObjectHideFlags: 0

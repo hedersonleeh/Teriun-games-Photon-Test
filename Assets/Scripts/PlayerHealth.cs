@@ -8,6 +8,7 @@ public class PlayerHealth : NetworkBehaviour
     [Networked, OnChangedRender(nameof(HealthChanged))]
     public float NetworkedHealth { get; set; } = 100;
     public bool IsDead => NetworkedHealth <= 0;
+    public NetworkBehaviour LastDealer { get; set; }
 
     private void Awake()
     {
@@ -22,12 +23,15 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void DealDamageRpc(float damage)
+    public void DealDamageRpc(NetworkBehaviour dealer, float damage)
     {
         // The code inside here will run on the client which owns this object (has state and input authority).
         Debug.Log("Received DealDamageRpc on StateAuthority, modifying Networked variable");
         if (!IsDead)
+        {
+            LastDealer = dealer;
             NetworkedHealth -= damage;
+        }
     }
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void ReviveRpc()

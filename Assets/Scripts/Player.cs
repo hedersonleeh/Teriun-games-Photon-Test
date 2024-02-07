@@ -21,7 +21,6 @@ public class Player : NetworkBehaviour
     private PlayerState _state;
     private CharacterController _cc;
     private PlayerHealth _playerHealth;
-    private ChangeDetector _changeDetector;
     private TMP_Text _messages;
     private ThirdPersonCameraController _thirdPersonCameraController;
     private Vector3 _forward = Vector3.forward;
@@ -33,7 +32,6 @@ public class Player : NetworkBehaviour
 
     public override void Spawned()
     {
-        _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
         _cc = GetComponent<CharacterController>();
         _playerHealth = GetComponent<PlayerHealth>();
         if (Object.HasInputAuthority)
@@ -51,42 +49,7 @@ public class Player : NetworkBehaviour
     }
 
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    private void RPC_SendMessage(string message, RpcInfo info = default)
-    {
-        RPC_RelayMessage(message, info.Source);
-    }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsServer)]
-    private void RPC_RelayMessage(string message, PlayerRef source)
-    {
-        if (_messages == null)
-            _messages = FindObjectOfType<TMP_Text>();
-
-        if (source == Runner.LocalPlayer)
-        {
-            message = $"You said: {message}\n";
-        }
-        else
-        {
-            message = $"Some other player said: {message}\n";
-        }
-        _messages.text += message;
-    }
-
-    public override void Render()
-    {
-        foreach (var change in _changeDetector.DetectChanges(this))
-        {
-            switch (change)
-            {
-                case nameof(spawnedProjectile):
-                    material.color = Color.white;
-                    break;
-            }
-        }
-        material.color = Color.Lerp(material.color, Color.blue, Time.smoothDeltaTime);
-
-    }
+   
     Vector3 _inputDirection = Vector3.zero;
     bool mouseButton0, mouseButton1;
     private void Update()
@@ -156,7 +119,6 @@ public class Player : NetworkBehaviour
 
         var displacement = (5 * desiredMoveDirection * Runner.DeltaTime);
         _cc.Move(displacement);
-        //_rb.MovePosition(newPos);
         if (desiredMoveDirection.sqrMagnitude > 0)
             _forward = desiredMoveDirection;
 
@@ -179,7 +141,7 @@ public class Player : NetworkBehaviour
                     origin, Quaternion.LookRotation(transform.forward), Object.InputAuthority,
                     (runner, o) =>
                     {
-                        o.GetComponent<Ball>().Init(GetComponent<PlayerColor>().playerColor);
+                        o.GetComponent<Ball>().Init(GetComponent<PlayerDataNetworked>().playerColor);
                     });
                 spawnedProjectile = !spawnedProjectile;
 
@@ -195,6 +157,8 @@ public class Player : NetworkBehaviour
         {
             _state = PlayerState.DEAD;
             deadTimer = TickTimer.CreateFromSeconds(Runner, 3f);
+            GetComponent<PlayerDataNetworked>().AddDeathCount();
+            _playerHealth.LastDealer.GetComponent<PlayerDataNetworked>().AddKillCount();
         }
     }
 }

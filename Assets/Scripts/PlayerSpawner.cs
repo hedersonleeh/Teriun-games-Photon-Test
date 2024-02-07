@@ -7,18 +7,30 @@ using UnityEngine;
 public class PlayerSpawner : SimulationBehaviour, IPlayerJoined, IPlayerLeft
 {
     [SerializeField] private GameObject _playerPrefab;
-    private PlayerDataDisplay _displayInfo;
-    private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
     private void SpawnPlayer(PlayerRef player)
     {
         // Create a unique position for the player
-        Vector3 spawnPosition = new Vector3((player.PlayerId % Runner.Config.Simulation.PlayerCount) * 3, 0, 0);
+
+        Vector3 spawnPosition = new Vector3();
+        switch (player.PlayerId % 4)
+        {
+            case 0:
+                spawnPosition = new Vector3(20, 0, 0);
+                break;
+            case 1:
+                spawnPosition = new Vector3(0, 0, 20);
+                break;
+            case 2:
+                spawnPosition = new Vector3(-20, 0, 0);
+                break;
+            case 3:
+                spawnPosition = new Vector3(0, 0, -20);
+                break;
+        }
         var networkPlayerObject = Runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
         // Set Player Object to facilitate access across systems.
         //Runner.SetPlayerObject(player, networkPlayerObject);
-        _displayInfo = FindObjectOfType<PlayerDataDisplay>();
-        _displayInfo.AddPlayerInfo(player);
 
     }
 
@@ -33,13 +45,7 @@ public class PlayerSpawner : SimulationBehaviour, IPlayerJoined, IPlayerLeft
 
     public void PlayerLeft(PlayerRef player)
     {
-        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
-        {
-            Runner.Despawn(networkObject);
-            _spawnedCharacters.Remove(player);
-            _displayInfo.RemovePlayerFromUI(player);
 
-        }
         // Reset Player Object
         Runner.SetPlayerObject(player, null);
 
